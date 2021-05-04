@@ -1,4 +1,23 @@
-import random
+from random import randint
+import time
+
+def dad_joke():
+        params = {"Accept: application/json"}
+        data = requests.get("https://icanhazdadjoke.com/",
+                            headers={"Accept": "application/json"})
+        data = data.json()
+        return(data["joke"])
+
+def countdown(t):
+    
+    while t:
+        mins, secs = divmod(t, 60)
+        timer = '{:02d}:{:02d}'.format(mins, secs)
+        print(timer, end="\r")
+        time.sleep(1)
+        t -= 1
+      
+    print('your timer is up ')
 
 home = input("enter your name: ")
 want = input(f"{home} what do you want: ")
@@ -14,17 +33,9 @@ if want == "riddle" or want == "Riddle" or want == "RIDDLE":
     else:
         print(f"{home} your answer is wrong")
 if want == "joke" or want == "JOKE" or want == "Joke":
-    import requests
+    print(dad_joke())
 
-    params = {"Accept: application/json"}
-
-    data = requests.get("https://icanhazdadjoke.com/",
-                        headers={"Accept": "application/json"})
-
-    data = data.json()
-
-    print(data["joke"])
-if want == "games" or want == "Games" or want == "GAMES" or want == ("game") or want == ("Game") or want == ("GAME"):
+if want == "game" or want == "Game" or want == "GAME":
     game = input("rps or tictactoe: ")
     if game == "tictactoe":
         board = [' ' for x in range(10)]
@@ -153,45 +164,45 @@ if want == "games" or want == "Games" or want == "GAMES" or want == ("game") or 
             else:
                 break
     if game == "rps":
-        from random import randint
-    y = 'y'
+        
+        y = 'y'
 
-    while y != 'n':
+        while y != 'n':
 
-        x = randint(1, 3)
-        print("1=rock,2=paper,3=sis")
-        man = int(input("enter a number between 1 and 3 : "))
+            x = randint(1, 3)
+            print("1=rock,2=paper,3=sis")
+            man = int(input("enter a number between 1 and 3 : "))
 
-        if man == 1:
-            print("you choose rock")
-        elif man == 2:
-            print("you choose paper")
-        else:
-            print("you choose sis")
+            if man == 1:
+                print("you choose rock")
+            elif man == 2:
+                print("you choose paper")
+            else:
+                print("you choose sis")
 
-        if x == 1:
-            print("computer choose rock")
-        elif x == 2:
-            print("computer choose paper")
-        else:
-            print("computer choose sis")
+            if x == 1:
+                print("computer choose rock")
+            elif x == 2:
+                print("computer choose paper")
+            else:
+                print("computer choose sis")
 
-        if x == man:
-            print("draw")
-        elif man == 1 and x == 3:
-            print("man won")
-        elif man == 2 and x == 1:
-            print("man won ")
-        elif man == 3 and x == 2:
-            print("man won")
-        else:
-            print("computer won")
+            if x == man:
+                print("draw")
+            elif man == 1 and x == 3:
+                print("man won")
+            elif man == 2 and x == 1:
+                print("man won ")
+            elif man == 3 and x == 2:
+                print("man won")
+            else:
+                print("computer won")
 
-        y = input("Would you like to play agian? y/n: ")
+            y = input("Would you like to play agian? y/n: ")
 if want == "calculator" or want == "Calculator" or want == "CALCULATOR":
-    x=int(input("enter a number: "))
+    x=float(input("enter a number: "))
     y=input("enter a opration: ")
-    z=int(input("enter a numder: "))
+    z=float(input("enter a numder: "))
 
     if y=="*":   
         print("your answer is", x*z)
@@ -204,4 +215,18 @@ if want == "calculator" or want == "Calculator" or want == "CALCULATOR":
 
     else:
         print("your answer is",x-z)
-             
+if want == "timer" or want == "Timer" or want == "TIMER":
+    t = input("Enter the time in seconds: ")
+    countdown(int(t))
+if want.lower() == "nick name":
+    name=input(f"would you like to change your nick name (enter y for yes and n for no):(your name is currently {home}) ")
+    if name == "y" :
+        new_name=input ("your new you nick name: ")
+        if new_name == home :
+            
+            print("it is alredy your nick name")
+        else:
+            print (f"okay your new nick name is {new_name} ")
+    if name == "n" :
+       print(f"okay I will keep calling you {home}") 
+    
