@@ -1,30 +1,63 @@
-from random import randint
+import os
+import youtube_dl
+import re
+import urllib.request
+import requests
 import time
+from random import randint
+
 
 def dad_joke():
-        params = {"Accept: application/json"}
-        data = requests.get("https://icanhazdadjoke.com/",
-                            headers={"Accept": "application/json"})
-        data = data.json()
-        return(data["joke"])
+    data = requests.get("https://icanhazdadjoke.com/",
+                        headers={"Accept": "application/json"})
+    data = data.json()
+    return(data["joke"])
+
 
 def countdown(t):
-    
+
     while t:
         mins, secs = divmod(t, 60)
         timer = '{:02d}:{:02d}'.format(mins, secs)
         print(timer, end="\r")
         time.sleep(1)
         t -= 1
-      
-    print('your timer is up ')
+
+    print(f'your timer is up{home}')
+
+
+def play_music(name):
+    name = list(name)
+    name = ["+" if x == " " else x for x in name]
+    vid_url = (f"https://www.youtube.com/results?search_query={''.join(name)}")
+    html = urllib.request.urlopen(vid_url)
+    video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
+    song_link = video_ids[0]
+    ydl_opts = {
+        'format': 'bestaudio/best',
+        'postprocessors': [{
+            'key': 'FFmpegExtractAudio',
+            'preferredcodec': 'mp3',
+            'preferredquality': '192',
+        }],
+        'outtmpl': "/content/drive/MyDrive/music/music.mp3",
+    }
+
+    if len(os.listdir('/content/drive/MyDrive/music')) != 0:
+        os.remove("/content/drive/MyDrive/music/music.mp3")
+
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download([f'https://www.youtube.com/watch?v={song_link}'])
+
+        print("DONE!")
+
 
 home = input("enter your name: ")
 want = input(f"{home} what do you want: ")
 if want == "riddle" or want == "Riddle" or want == "RIDDLE":
     riddle = ["what goes up when rain comes down ?", "How many months of the year have 28 days?",
               "What has hands and a face, but can’t hold anything or smile?", " If you don’t keep me, I’ll break. What am I?"]
-    num = random.randint(0, 3)
+    num = randint(0, 3)
     print(riddle[num])
     solution = ["umbrella", "12", "clock", "promise."]
     answer = input("your answer pls ")
@@ -32,10 +65,10 @@ if want == "riddle" or want == "Riddle" or want == "RIDDLE":
         print(f"{home} your answer is correct")
     else:
         print(f"{home} your answer is wrong")
-if want == "joke" or want == "JOKE" or want == "Joke":
+elif want == "joke" or want == "JOKE" or want == "Joke":
     print(dad_joke())
 
-if want == "game" or want == "Game" or want == "GAME":
+elif want == "game" or want == "Game" or want == "GAME":
     game = input("rps or tictactoe: ")
     if game == "tictactoe":
         board = [' ' for x in range(10)]
@@ -60,7 +93,11 @@ if want == "game" or want == "Game" or want == "GAME":
             print('   |   |')
 
         def isWinner(bo, le):
-            return (bo[7] == le and bo[8] == le and bo[9] == le) or (bo[4] == le and bo[5] == le and bo[6] == le) or (bo[1] == le and bo[2] == le and bo[3] == le) or (bo[1] == le and bo[4] == le and bo[7] == le) or (bo[2] == le and bo[5] == le and bo[8] == le) or (bo[3] == le and bo[6] == le and bo[9] == le) or (bo[1] == le and bo[5] == le and bo[9] == le) or (bo[3] == le and bo[5] == le and bo[7] == le)
+            return (bo[7] == le and bo[8] == le and bo[9] == le) or (bo[4] == le and
+            bo[5] == le and bo[6] == le) or (bo[1] == le and bo[2] == le
+            and bo[3] == le) or (bo[1] == le and bo[4] == le and bo[7] == le) or (bo[2] == le
+            and bo[5] == le and bo[8] == le) or (bo[3] == le and bo[6] == le and bo[9] == le) or (bo[1] == le
+            and bo[5] == le and bo[9] == le) or (bo[3] == le and bo[5] == le and bo[7] == le)
 
         def playerMove():
             run = True
@@ -164,7 +201,7 @@ if want == "game" or want == "Game" or want == "GAME":
             else:
                 break
     if game == "rps":
-        
+
         y = 'y'
 
         while y != 'n':
@@ -199,34 +236,41 @@ if want == "game" or want == "Game" or want == "GAME":
                 print("computer won")
 
             y = input("Would you like to play agian? y/n: ")
-if want == "calculator" or want == "Calculator" or want == "CALCULATOR":
-    x=float(input("enter a number: "))
-    y=input("enter a opration: ")
-    z=float(input("enter a numder: "))
+elif want == "calculator" or want == "Calculator" or want == "CALCULATOR":
+    x = float(input("enter a number: "))
+    y = input("enter a opration: ")
+    z = float(input("enter a numder: "))
 
-    if y=="*":   
+    if y == "*":
         print("your answer is", x*z)
-    elif y=="/":
+    elif y == "/":
         print("your answer is", x/z)
-    elif y=="+":
+    elif y == "+":
         print("your answer is", x+z)
-    elif y=="^":
+    elif y == "^":
         print("your answer is", x**z)
 
     else:
-        print("your answer is",x-z)
-if want == "timer" or want == "Timer" or want == "TIMER":
+        print("your answer is", x-z)
+elif want == "timer" or want == "Timer" or want == "TIMER":
     t = input("Enter the time in seconds: ")
     countdown(int(t))
-if want.lower() == "nick name":
-    name=input(f"would you like to change your nick name (enter y for yes and n for no):(your name is currently {home}) ")
-    if name == "y" :
-        new_name=input ("your new you nick name: ")
-        if new_name == home :
-            
+elif want.lower() == "nick name":
+    name = input(
+        f"would you like to change your nick name (enter y for yes and n for no):(your name is currently {home}) ")
+    if name == "y":
+        new_name = input("your new you nick name: ")
+        if new_name == home:
+
             print("it is alredy your nick name")
         else:
-            print (f"okay your new nick name is {new_name} ")
-    if name == "n" :
-       print(f"okay I will keep calling you {home}") 
-    
+            print(f"okay your new nick name is {new_name} ")
+    if name == "n":
+        print(f"okay I will keep calling you {home}")
+if want.lower() == "music":
+    name_song = input("music name")
+    play_music(f"{name_song}")
+
+
+else:
+    print("sorry i can not do that ")
