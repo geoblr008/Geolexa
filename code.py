@@ -33,6 +33,13 @@ def play_music(name):
     html = urllib.request.urlopen(vid_url)
     video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
     song_link = video_ids[0]
+    path = os.getcwd()
+    music_folder = os.path.join(path, "music")
+    if os.path.exists(music_folder):
+        music_folder = os.path.join(path, "music")
+    else:
+        os.mkdir(os.path.join(path, "music"))
+        music_folder = os.path.join(path, "music")
     ydl_opts = {
         'format': 'bestaudio/best',
         'postprocessors': [{
@@ -40,12 +47,12 @@ def play_music(name):
             'preferredcodec': 'mp3',
             'preferredquality': '192',
         }],
-        'outtmpl': "/content/drive/MyDrive/music/music.mp3",
+        'outtmpl': os.path.join(music_folder, "music.mp3"),
     }
 
-    if len(os.listdir('/content/drive/MyDrive/music')) != 0:
-        os.remove("/content/drive/MyDrive/music/music.mp3")
-
+    if len(os.listdir(music_folder)) != 0:
+        os.remove(os.path.join(music_folder, "music.mp3"))
+    else:
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
             ydl.download([f'https://www.youtube.com/watch?v={song_link}'])
 
